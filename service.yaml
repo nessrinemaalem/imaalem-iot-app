@@ -1,0 +1,28 @@
+# =============================================================================
+# service.yaml — adresse stable devant le Pod, et porte d'entree depuis l'hote.
+#
+# Type NodePort (et non ClusterIP comme en p2) : le cluster tourne dans Docker,
+# il faut donc un port ouvert sur les nodes pour que le load-balancer de k3d
+# puisse y transmettre le trafic.
+#
+# La chaine complete :
+#   curl localhost:8888
+#     -> conteneur k3d-iot-serverlb   (mapping -p "8888:30080@loadbalancer")
+#     -> node, port 30080             (nodePort)
+#     -> Service, port 8888           (port)
+#     -> Pod, port 8888               (targetPort)
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: playground
+  namespace: dev
+spec:
+  type: NodePort
+  selector:
+    app: playground        # meme label que le template du Deployment
+  ports:
+    - port: 8888           # port du Service
+      targetPort: 8888     # port du conteneur
+      nodePort: 30080      # port ouvert sur le node (doit correspondre au
+                           # mapping k3d defini dans p3/scripts/setup.sh)

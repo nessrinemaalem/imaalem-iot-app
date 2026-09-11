@@ -1,0 +1,39 @@
+# =============================================================================
+# deployment.yaml — l'application deployee par Argo CD dans le namespace dev.
+#
+# CE FICHIER EST LA SOURCE DE VERITE. Argo CD surveille ce depot en permanence
+# et applique dans le cluster tout changement pousse ici. C'est la ligne
+# "image:" ci-dessous que l'on modifiera (v1 -> v2) pour declencher le
+# redeploiement automatique.
+# =============================================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playground
+  namespace: dev
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: playground
+
+  template:
+    metadata:
+      labels:
+        app: playground
+    spec:
+      containers:
+        - name: playground
+          # Application fournie par le sujet, disponible sur Docker Hub.
+          # Les deux versions demandees existent sous les tags v1 et v2.
+          image: wil42/playground:v1
+          ports:
+            # L'application ecoute sur 8888 (indique dans le sujet).
+            - containerPort: 8888
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
