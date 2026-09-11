@@ -27,7 +27,7 @@ spec:
         - name: playground
           # Application fournie par le sujet, disponible sur Docker Hub.
           # Les deux versions demandees existent sous les tags v1 et v2.
-          image: wil42/playground:v1
+          image: wil42/playground:v2
           ports:
             # L'application ecoute sur 8888 (indique dans le sujet).
             - containerPort: 8888
